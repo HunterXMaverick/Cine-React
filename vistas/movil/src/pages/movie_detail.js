@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ImageBackground, TouchableHighlight, ScrollView, AsyncStorage,image} from 'react-native';
+import { Text, View, StyleSheet, ImageBackground, TouchableHighlight, ScrollView, AsyncStorage, image } from 'react-native';
 import { Card } from 'react-native-elements';
 import { Link } from "react-router-native";
 import { RadioButton } from 'react-native-paper';
 import axios from 'axios';
 
-const API = "http://192.168.1.23:5000/film/";
+const API = "http://192.168.100.10:5000/film/";
 
 
 export default class MovieDetail extends Component {
@@ -20,21 +20,21 @@ export default class MovieDetail extends Component {
   }
 
   getData = () => {
-    axios.get(`${ API }pelicula?id=${ this.state.idpelicula }`)
-    .then(response => {
-      this.setState({ pelicula: response.data.datos })
-    })
-    .catch(error => {
-      console.log(error)
-    })
-  
-    axios.get(`${ API }raw2?idpelicula=${ this.state.idpelicula }`)
-    .then(response => {
-      this.setState({ sala_peliculas: response.data.datos })
-    })
-    .catch(error => {
-      console.log(error)
-    })
+    axios.get(`${API}pelicula?id=${this.state.idpelicula}`)
+      .then(response => {
+        this.setState({ pelicula: response.data.datos })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+    axios.get(`${API}raw2?idpelicula=${this.state.idpelicula}`)
+      .then(response => {
+        this.setState({ sala_peliculas: response.data.datos })
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   asyncstorageSave_idsala_peliculas = async (id) => {
@@ -72,7 +72,7 @@ export default class MovieDetail extends Component {
   asyncstorageGet = async () => {
     try {
       const idfilm = await AsyncStorage.getItem('idpelicula')
-      this.setState({idpelicula: idfilm})
+      this.setState({ idpelicula: idfilm })
       this.getData()
     } catch (e) {
       alert(e)
@@ -94,57 +94,57 @@ export default class MovieDetail extends Component {
 
   render() {
     const { pelicula, sala_peliculas, checked } = this.state
-    return(
-      <ImageBackground style={ styles.container } source={ require('../../assets/Fondo1.png') }>
-        <View style={ styles.overlayContainer}>
-          <View style={ styles.top }>
-            <Text style={ styles.header }>DETALLE DE LA PELÍCULA</Text>
+    return (
+      <ImageBackground style={styles.container} source={require('../../assets/Fondo1.png')}>
+        <View style={styles.overlayContainer}>
+          <View style={styles.top}>
+            <Text style={styles.header}>DETALLE DE LA PELÍCULA</Text>
           </View>
 
           <ScrollView vertical={true}>
-            { pelicula.map( element => 
-              <Card key={ element.id } title={ element.titulo } image={{uri:`${element.imagen}`}}>
-                <Text style={{marginBottom: 10}}>
-                  Resumen: { element.resumen }
+            {pelicula.map(element =>
+              <Card key={element.id} title={element.titulo} image={{ uri: `${element.imagen}` }}>
+                <Text style={{ marginBottom: 10 }}>
+                  Resumen: {element.resumen}
                 </Text>
-                <Text style={{marginBottom: 10}}>
-                  Categoría: { element.categoria }
+                <Text style={{ marginBottom: 10 }}>
+                  Categoría: {element.categoria}
                 </Text>
-                <Text style={{marginBottom: 10}}>
-                  Valor de Boleto: { element.valorBoleto }
+                <Text style={{ marginBottom: 10 }}>
+                  Valor de Boleto: {element.valorBoleto}
                 </Text>
               </Card>
-              )
+            )
             }
 
             <Card title="Horarios Disponibles" >
-              { sala_peliculas.map( element => 
-                <View key={ element.id }>
-                  <Text>Horario: { element.idhorario_hora }</Text>
-                  <Text>Sala: { element.idsala_nombre }</Text>
-                  <RadioButton value={ element.id }
+              {sala_peliculas.map(element =>
+                <View key={element.id}>
+                  <Text>Horario: {element.idhorario_hora}</Text>
+                  <Text>Sala: {element.idsala_nombre}</Text>
+                  <RadioButton value={element.id}
                     status={checked === element.id ? 'checked' : 'unchecked'}
-                    onPress={() => { 
-                      this.setState({ checked: element.id }), 
-                      this.asyncstorageSave_idsala_peliculas(element.id), 
-                      this.asyncstorageSave_idpelicula_titulo(element.idpelicula_titulo),
-                      this.asyncstorageSave_idhorario_hora(element.idhorario_hora),
-                      this.asyncstorageSave_idsala_nombre(element.idsala_nombre)
+                    onPress={() => {
+                      this.setState({ checked: element.id }),
+                        this.asyncstorageSave_idsala_peliculas(element.id),
+                        this.asyncstorageSave_idpelicula_titulo(element.idpelicula_titulo),
+                        this.asyncstorageSave_idhorario_hora(element.idhorario_hora),
+                        this.asyncstorageSave_idsala_nombre(element.idsala_nombre)
                     }}
                   />
                 </View>
-                )
+              )
               }
             </Card>
 
             <TouchableHighlight>
-              <Link to="/" style={ styles.button } onPress={ () => this.asyncstorageClear() }>
+              <Link to="/" style={styles.button} onPress={() => this.asyncstorageClear()}>
                 <Text>Volver</Text>
               </Link>
             </TouchableHighlight>
-          
+
             <TouchableHighlight>
-              <Link to="/buy_tickets"  style={ styles.button }>
+              <Link to="/buy_tickets" style={styles.button}>
                 <Text>Comprar</Text>
               </Link>
             </TouchableHighlight>
@@ -156,11 +156,11 @@ export default class MovieDetail extends Component {
 }
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    width: '100%', 
+  container: {
+    flex: 1,
+    width: '100%',
     height: '100%',
-    justifyContent:'center',
+    justifyContent: 'center',
     backgroundColor: 'red',
   },
   overlayContainer: {
